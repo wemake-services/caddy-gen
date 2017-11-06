@@ -11,7 +11,8 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
     ports:
       - "80:80"
-      - "2015:2015"
+    environment:
+      TSL_EMAIL: ''  # set to valid email to activate SSL
     depends_on:
       - whoami
 

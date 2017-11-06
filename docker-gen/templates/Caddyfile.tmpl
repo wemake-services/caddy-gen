@@ -1,4 +1,6 @@
 {{ $hosts := groupByLabel $ "virtual.host" }}
+{{ $tlsEnv := $.Env.TSL_EMAIL }}
+{{ $tlsOff := eq $tlsEnv "" }}
 
 {{ if not $hosts }}
 
@@ -11,8 +13,9 @@ errors stderr
 {{ range $h, $containers := $hosts }}
 {{ $c := first $containers }}
 {{ $host := index $c.Labels "virtual.host" }}
-{{ $host }} {
-  tls off
+
+{{ if $tlsOff }}http://{{ end }}{{ $host }} {
+  {{ if $tlsOff }}tls off{{ else }}tls {{ $tlsEnv }}{{ end }}
 
   proxy / {
     policy round_robin
