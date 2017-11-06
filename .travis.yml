@@ -1,0 +1,15 @@
+language: python
+
+python:
+  - 3.6
+
+services:
+  - docker
+
+install:
+  - docker build -t caddy-gen:latest .
+  - docker run -d -p 2015:2015 -v /var/run/docker.sock:/tmp/docker.sock:ro --name caddy-gen caddy-gen
+
+script:
+  - docker ps | grep -q caddy-gen  # there should be a docker process
+  - curl 127.0.0.1:2015  # it should be available

@@ -1,0 +1,27 @@
+# Default compose file for development and production.
+# Should
+
+version: "3"
+services:
+  caddy-gen:
+    container_name: caddy-gen
+    build: .
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    ports:
+      - "80:80"
+      - "2015:2015"
+    depends_on:
+      - whoami
+
+  whoami:
+    image: "katacoda/docker-http-server:v1"
+    labels:
+      - "virtual.host=127.0.0.1"
+
+  whoami2:
+    image: "katacoda/docker-http-server:v2"
+    labels:
+      - "virtual.host=localhost"
+      - "virtual.port=80"

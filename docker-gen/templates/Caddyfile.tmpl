@@ -1,0 +1,35 @@
+{{ $hosts := groupByLabel $ "virtual.host" }}
+
+{{ if not $hosts }}
+
+127.0.0.1:2015
+log stdout
+errors stderr
+
+{{ else }}
+
+{{ range $h, $containers := $hosts }}
+{{ $c := first $containers }}
+{{ $host := index $c.Labels "virtual.host" }}
+{{ $host }} {
+  tls off
+
+  proxy / {
+    policy round_robin
+    transparent
+
+    {{ range $i, $container := $containers }}
+    {{ range $j, $net := $container.Networks }}
+    {{ $port := index $container.Labels "virtual.port" }}
+    upstream {{ $net.IP }}:{{ if $port }}{{ $port }}{{ else }}80{{ end }}
+    {{ end }}
+    {{ end }}
+  }
+
+  gzip
+  log stdout
+  errors stderr
+}
+{{ end }}
+
+{{ end }}
