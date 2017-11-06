@@ -1,6 +1,3 @@
-# Default compose file for development and production.
-# Should
-
 version: "3"
 services:
   caddy-gen:
@@ -11,8 +8,6 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
     ports:
       - "80:80"
-    environment:
-      TSL_EMAIL: ''  # set to valid email to activate SSL
     depends_on:
       - whoami
 
@@ -26,3 +21,4 @@ services:
     labels:
       - "virtual.host=localhost"
       - "virtual.port=80"
+      - "virtual.tls-email" # set to valid email to activate SSL
