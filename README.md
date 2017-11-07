@@ -2,9 +2,9 @@
 
 [![wemake.services](https://img.shields.io/badge/style-wemake.services-green.svg?label=&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC%2FxhBQAAAAFzUkdCAK7OHOkAAAAbUExURQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP%2F%2F%2F5TvxDIAAAAIdFJOUwAjRA8xXANAL%2Bv0SAAAADNJREFUGNNjYCAIOJjRBdBFWMkVQeGzcHAwksJnAPPZGOGAASzPzAEHEGVsLExQwE7YswCb7AFZSF3bbAAAAABJRU5ErkJggg%3D%3D)](http://wemake.services) [![Build Status](https://travis-ci.org/wemake-services/caddy-gen.svg?branch=master)](https://travis-ci.org/wemake-services/caddy-gen) [![Dockerhub](https://img.shields.io/docker/pulls/wemakeservices/caddy-gen.svg)](https://hub.docker.com/r/wemakeservices/caddy-gen/) [![image size](https://images.microbadger.com/badges/image/wemakeservices/caddy-gen.svg)](https://microbadger.com/images/wemakeservices/caddy-gen) [![caddy's version](https://img.shields.io/badge/version-0.10.9-blue.svg)](https://github.com/mholt/caddy/tree/v0.10.10)
 
-Perfect mix of `Caddy` and `docker-gen`.
+A perfect mix of [`Caddy`](https://github.com/mholt/caddy), [`docker-gen`](https://github.com/jwilder/docker-gen), and [`forego`](https://github.com/jwilder/forego). Inspired by [`nginx-proxy`](https://github.com/jwilder/nginx-proxy).
 
-Inspired by [`nginx-proxy`](https://github.com/jwilder/nginx-proxy).
+---
 
 
 ## Usage
@@ -19,7 +19,9 @@ services:
     image: "wemakeservices/caddy-gen:latest"
     restart: always
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro  # needs socket to read event
+      - /var/run/docker.sock:/tmp/docker.sock:ro  # needs socket to read events
+      - ./certs/acme:/etc/caddy/acme  # to save acme
+      - ./certs/ocsp:/etc/caddy/ocsp  # to save certificates
     ports:
       - "80:80"
       - "443:443"
@@ -51,6 +53,19 @@ There are several options to configure:
 - `virtual.tls_email` could be empty, unset or set to [valid email](https://caddyserver.com/docs/tls)
 
 Note, that options should not differ for containers of a single service.
+
+### Backing up certificates
+
+Certificates are stored in `/etc/caddy/acme/` and `/etc/caddy/ocsp` folders.
+Make them `volume`s to save them on your host machine.
+
+### Versions
+
+This image supports three [build-time](https://docs.docker.com/engine/reference/commandline/build/#set-build-time-variables-build-arg) arguments:
+
+- `CADDY_VERSION` to change the current version of [`Caddy`](https://github.com/mholt/caddy/releases)
+- `FOREGO_VERSION` to change the current version of [`forego`](https://github.com/jwilder/forego/releases)
+- `DOCKER_GETN_VERSION` to change the current version of [`docker-gen`](https://github.com/jwilder/docker-gen/releases)
 
 
 ## See also
