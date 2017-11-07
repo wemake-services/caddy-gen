@@ -7,6 +7,15 @@ A perfect mix of [`Caddy`](https://github.com/mholt/caddy), [`docker-gen`](https
 ---
 
 
+## Why
+
+Using `Caddy` as your primary web server is super simple.
+But when you need to scale your application Caddy is limited to its static configuration.
+
+To overcome this issue we are using `docker-gen` to generate configuration everytime a container spawns or dies.
+Now scaling is easy!
+
+
 ## Usage
 
 This image is created to be used in a single container.
