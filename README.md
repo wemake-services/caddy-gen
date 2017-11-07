@@ -65,7 +65,7 @@ This image supports three [build-time](https://docs.docker.com/engine/reference/
 
 - `CADDY_VERSION` to change the current version of [`Caddy`](https://github.com/mholt/caddy/releases)
 - `FOREGO_VERSION` to change the current version of [`forego`](https://github.com/jwilder/forego/releases)
-- `DOCKER_GETN_VERSION` to change the current version of [`docker-gen`](https://github.com/jwilder/docker-gen/releases)
+- `DOCKER_GEN_VERSION` to change the current version of [`docker-gen`](https://github.com/jwilder/docker-gen/releases)
 
 
 ## See also
