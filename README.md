@@ -53,6 +53,11 @@ There are several options to configure:
 Note, that options should not differ for containers of a single service.
 
 
+## See also
+
+- Raw `Caddy` [image](https://github.com/wemake-services/caddy-docker)
+
+
 ## Changelog
 
 Full changelog is available [here](https://github.com/wemake-services/caddy-gen/blob/master/CHANGELOG.md).
