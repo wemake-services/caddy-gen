@@ -12,4 +12,9 @@ install:
 
 script:
   - docker ps | grep -q caddy-gen  # there should be a docker process
-  - curl 127.0.0.1:2015  # it should be available
+  - curl 127.0.0.1:2015  # it should be available and return 404
+
+notifications:
+  email:
+    on_success: never
+    on_failure: change

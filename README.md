@@ -9,7 +9,32 @@ Inspired by [`nginx-proxy`](https://github.com/jwilder/nginx-proxy).
 
 ## Usage
 
-See [`docker-compose.yml`](https://github.com/wemake-services/caddy-gen/blob/master/docker-compose.yml) example file.
+This image is created to be used in a single container.
+
+```yaml
+version: "3"
+services:
+  caddy-gen:
+    container_name: caddy-gen
+    image: "wemakeservices/caddy-gen:latest"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro  # needs socket to read event
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - whoami
+
+  whoami:  # this is your service
+    image: "katacoda/docker-http-server:v2"
+    labels:
+      - "virtual.host=myapp.com"  # your domain
+      - "virtual.port=80"  # exposed port of this container
+      - "virtual.tls-email=admin@myapp.com"  # ssl is now on
+```
+
+Or see [`docker-compose.yml`](https://github.com/wemake-services/caddy-gen/blob/master/docker-compose.yml) example file.
 
 
 ## Configuration
@@ -26,6 +51,11 @@ There are several options to configure:
 - `virtual.tls_email` could be empty, unset or set to [valid email](https://caddyserver.com/docs/tls)
 
 Note, that options should not differ for containers of a single service.
+
+
+## Changelog
+
+Full changelog is available [here](https://github.com/wemake-services/caddy-gen/blob/master/CHANGELOG.md).
 
 
 ## License

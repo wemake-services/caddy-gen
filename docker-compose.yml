@@ -8,8 +8,10 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - whoami
+      - whoami2
 
   whoami:
     image: "katacoda/docker-http-server:v1"
