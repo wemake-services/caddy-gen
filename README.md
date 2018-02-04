@@ -58,7 +58,7 @@ Then, every container represents a single `upstream` to serve requests.
 
 There are several options to configure:
 - `virtual.host` is basically a domain name, see [`Caddy` docs](https://caddyserver.com/docs/proxy)
-- `virtual.port` should be one of `[80, 433, 2015]`
+- `virtual.port` exposed port of the container
 - `virtual.tls_email` could be empty, unset or set to [valid email](https://caddyserver.com/docs/tls)
 
 Note, that options should not differ for containers of a single service.
