@@ -41,6 +41,7 @@ services:
     image: "katacoda/docker-http-server:v2"
     labels:
       - "virtual.host=myapp.com"  # your domain
+      - "virtual.alias=www.myapp.com"  # alias for your domain (optional)
       - "virtual.port=80"  # exposed port of this container
       - "virtual.tls-email=admin@myapp.com"  # ssl is now on
 ```
@@ -58,6 +59,7 @@ Then, every container represents a single `upstream` to serve requests.
 
 There are several options to configure:
 - `virtual.host` is basically a domain name, see [`Caddy` docs](https://caddyserver.com/docs/proxy)
+- `virtual.alias` (optional) domain alias, useful for `www` prefix with redirect. For example `www.myapp.com`. Alias will always redirect to the host above.
 - `virtual.port` exposed port of the container
 - `virtual.tls_email` could be empty, unset or set to [valid email](https://caddyserver.com/docs/tls)
 
