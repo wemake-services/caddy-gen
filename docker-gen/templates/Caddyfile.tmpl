@@ -10,11 +10,19 @@ errors stderr
 
 {{ range $h, $containers := $hosts }}
 {{ $c := first $containers }}
-{{ $host := index $c.Labels "virtual.host" }}
+{{ $host := trim (index $c.Labels "virtual.host") }}
 {{ $tlsEnv := trim (index $c.Labels "virtual.tls-email") }}
 {{ $tlsOff := eq $tlsEnv "" }}
+{{ $alias := trim (index $c.Labels "virtual.alias") }}
+{{ $aliasPresent := ne $alias "" }}
 
-{{ if $tlsOff }}http://{{ end }}{{ trim $host }} {
+{{ if $aliasPresent  }}
+{{ if $tlsOff }}http://{{ end }}{{ $alias }} {
+  redir {{ if $tlsOff }}http://{{ else }}https://{{ end }}{{ $host }}
+}
+{{ end }}
+
+{{ if $tlsOff }}http://{{ end }}{{ $host }} {
   tls {{ if $tlsOff }}off{{ else }}{{ $tlsEnv }}{{ end }}
 
   proxy / {
