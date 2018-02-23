@@ -10,7 +10,8 @@ errors stderr
 
 {{ range $h, $containers := $hosts }}
 {{ $c := first $containers }}
-{{ $host := trim (index $c.Labels "virtual.host") }}
+{{ $allhosts := trim (index $c.Labels "virtual.host") }}
+{{ range $t, $host := split $allhosts " " }}
 {{ $tlsEnv := trim (index $c.Labels "virtual.tls-email") }}
 {{ $tlsOff := eq $tlsEnv "" }}
 {{ $alias := trim (index $c.Labels "virtual.alias") }}
@@ -41,6 +42,7 @@ errors stderr
   log stdout
   errors stderr
 }
+{{ end }}
 {{ end }}
 
 {{ end }}
