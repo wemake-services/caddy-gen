@@ -40,7 +40,7 @@ services:
   whoami:  # this is your service
     image: "katacoda/docker-http-server:v2"
     labels:
-      - "virtual.host=myapp.com"  # your domain
+      - "virtual.host=myapp.com example.com"  # your domains separated with a space
       - "virtual.alias=www.myapp.com"  # alias for your domain (optional)
       - "virtual.port=80"  # exposed port of this container
       - "virtual.tls-email=admin@myapp.com"  # ssl is now on
