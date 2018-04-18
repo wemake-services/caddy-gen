@@ -1,10 +1,11 @@
-FROM alpine:3.6
+FROM alpine:3.7
 
 LABEL maintainer="Nikita Sobolev <sobolevn@wemake.services>"
+LABEL vendor="wemake.services"
 
-ARG CADDY_VERSION="0.10.10"
+ARG CADDY_VERSION="0.10.11"
 ARG FOREGO_VERSION="0.16.1"
-ARG DOCKER_GEN_VERSION="0.7.3"
+ARG DOCKER_GEN_VERSION="0.7.4"
 
 ENV CADDYPATH="/etc/caddy"
 ENV DOCKER_HOST unix:///tmp/docker.sock
