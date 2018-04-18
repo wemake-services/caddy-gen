@@ -2,6 +2,7 @@ FROM alpine:3.7
 
 LABEL maintainer="Nikita Sobolev <sobolevn@wemake.services>"
 LABEL vendor="wemake.services"
+LABEL version="0.1.0"
 
 ARG CADDY_VERSION="0.10.11"
 ARG FOREGO_VERSION="0.16.1"
