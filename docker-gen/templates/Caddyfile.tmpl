@@ -29,7 +29,7 @@ errors stderr
   proxy / {
     policy round_robin
     transparent
-    websocket
+    {{ if contains $c.Labels "virtual.websocket" }}websocket{{ end }}
     
     {{ range $i, $container := $containers }}
     {{ range $j, $net := $container.Networks }}
