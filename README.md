@@ -44,6 +44,7 @@ services:
       - "virtual.alias=www.myapp.com"  # alias for your domain (optional)
       - "virtual.port=80"  # exposed port of this container
       - "virtual.tls-email=admin@myapp.com"  # ssl is now on
+      - "virtual.websockets" # enable websocket passthrough
 ```
 
 Or see [`docker-compose.yml`](https://github.com/wemake-services/caddy-gen/blob/master/docker-compose.yml) example file.
@@ -62,6 +63,7 @@ There are several options to configure:
 - `virtual.alias` (optional) domain alias, useful for `www` prefix with redirect. For example `www.myapp.com`. Alias will always redirect to the host above.
 - `virtual.port` exposed port of the container
 - `virtual.tls_email` could be empty, unset or set to [valid email](https://caddyserver.com/docs/tls)
+- `virtual.websocket` when set, enables websocket connection passthrough
 
 Note, that options should not differ for containers of a single service.
 
