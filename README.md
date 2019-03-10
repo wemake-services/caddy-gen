@@ -62,7 +62,8 @@ There are several options to configure:
 - `virtual.host` is basically a domain name, see [`Caddy` docs](https://caddyserver.com/docs/proxy)
 - `virtual.alias` (optional) domain alias, useful for `www` prefix with redirect. For example `www.myapp.com`. Alias will always redirect to the host above.
 - `virtual.port` exposed port of the container
-- `virtual.tls_email` could be empty, unset or set to [valid email](https://caddyserver.com/docs/tls)
+- `virtual.tls-email` could be empty, unset or set to [valid email](https://caddyserver.com/docs/tls)
+- `virtual.tls` (alias of `virtual.tls-email`) could be empty, unset or set to a [valid set of tls directive value(s)](https://caddyserver.com/docs/tls)
 - `virtual.websocket` when set, enables websocket connection passthrough
 
 Note, that options should not differ for containers of a single service.
