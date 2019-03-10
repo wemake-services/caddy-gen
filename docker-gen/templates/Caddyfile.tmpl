@@ -12,7 +12,9 @@ errors stderr
 {{ $c := first $containers }}
 {{ $allhosts := trim (index $c.Labels "virtual.host") }}
 {{ range $t, $host := split $allhosts " " }}
-{{ $tlsEnv := trim (index $c.Labels "virtual.tls-email") }}
+{{ $tlsEmail := trim (index $c.Labels "virtual.tls-email") }}
+{{ $tlsConfig := trim (index $c.Labels "virtual.tls") }}
+{{ $tlsEnv := or $tlsEmail $tlsConfig }}
 {{ $tlsOff := eq $tlsEnv "" }}
 {{ $alias := trim (index $c.Labels "virtual.alias") }}
 {{ $aliasPresent := ne $alias "" }}
@@ -30,7 +32,7 @@ errors stderr
     policy round_robin
     transparent
     {{ if contains $c.Labels "virtual.websockets" }}websocket{{ end }}
-    
+
     {{ range $i, $container := $containers }}
     {{ range $j, $net := $container.Networks }}
     {{ $port := index $container.Labels "virtual.port" }}
