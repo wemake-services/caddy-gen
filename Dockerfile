@@ -4,7 +4,7 @@ LABEL maintainer="Nikita Sobolev <sobolevn@wemake.services>"
 LABEL vendor="wemake.services"
 LABEL version="0.1.0"
 
-ARG CADDY_VERSION="0.10.11"
+ARG CADDY_VERSION="0.10.12"
 ARG FOREGO_VERSION="0.16.1"
 ARG DOCKER_GEN_VERSION="0.7.4"
 
