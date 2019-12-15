@@ -10,6 +10,7 @@ We used to have incremental versioning before `0.1.0`.
 - Updates `Caddy` version to `0.10.12`
 - Adds `"virtual.websockets"` configuration to work with websockets
 - Adds `docker-image-size-limit`
+- Minifies image as possible
 
 
 ## Version 0.1.0
