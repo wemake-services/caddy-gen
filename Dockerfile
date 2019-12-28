@@ -1,4 +1,4 @@
-FROM alpine:3.11.0
+FROM alpine:3.11.2
 
 LABEL maintainer="Nikita Sobolev <sobolevn@wemake.services>"
 LABEL vendor="wemake.services"
