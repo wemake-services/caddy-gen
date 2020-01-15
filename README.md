@@ -49,6 +49,8 @@ services:
       - "virtual.port=80"  # exposed port of this container
       - "virtual.tls-email=admin@myapp.com"  # ssl is now on
       - "virtual.websockets" # enable websocket passthrough
+      - "virtual.auth.username=admin" # Optionally add http basic authentication
+      - "virtual.auth.password=1234" # By specifying both username and password
 ```
 
 Or see [`docker-compose.yml`](https://github.com/wemake-services/caddy-gen/blob/master/docker-compose.yml) example file.
@@ -69,6 +71,8 @@ There are several options to configure:
 - `virtual.tls-email` could be empty, unset or set to [valid email](https://caddyserver.com/docs/tls)
 - `virtual.tls` (alias of `virtual.tls-email`) could be empty, unset or set to a [valid set of tls directive value(s)](https://caddyserver.com/docs/tls)
 - `virtual.websocket` when set, enables websocket connection passthrough
+- `virtual.auth.username` when set, along with `virtual.auth.password`, http basic authentication is enabled
+- `virtual.auth.password` needs to be specified, along with `virtual.auth.usernmae`, to enable http basic authentication
 
 Note, that options should not differ for containers of a single service.
 
