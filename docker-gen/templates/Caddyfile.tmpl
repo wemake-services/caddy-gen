@@ -18,6 +18,9 @@ errors stderr
 {{ $tlsOff := eq $tlsEnv "" }}
 {{ $alias := trim (index $c.Labels "virtual.alias") }}
 {{ $aliasPresent := ne $alias "" }}
+{{ $authUsername := trim (index $c.Labels "virtual.auth.username") }}
+{{ $authPassword := trim (index $c.Labels "virtual.auth.password") }}
+{{ $basicauth := and (ne $authUsername "") (ne $authPassword "") }}
 
 {{ if $aliasPresent  }}
 {{ if $tlsOff }}http://{{ end }}{{ $alias }} {
@@ -28,6 +31,9 @@ errors stderr
 {{ if $tlsOff }}http://{{ end }}{{ $host }} {
   tls {{ if $tlsOff }}off{{ else }}{{ $tlsEnv }}{{ end }}
 
+  {{ if $basicauth }}
+  basicauth / {{ $authUsername }} {{ $authPassword }}
+  {{ end }}
   proxy / {
     policy round_robin
     transparent
