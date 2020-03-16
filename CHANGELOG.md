@@ -4,6 +4,13 @@ We follow Semantic Versions since the `0.1.0` release.
 We used to have incremental versioning before `0.1.0`.
 
 
+## Version 0.3.0
+
+- Updates `alpine` version to `3.11`
+- Adds `http` basic auth
+- Adds `docker-image-size-limit`
+
+
 ## Version 0.2.0
 
 - Updates `alpine` version to `3.10`
