@@ -20,7 +20,7 @@ Now scaling is easy!
 
 ## CADDY 2
 
-BREAKING CHANGES since [version 0.30.0](https://github.com/wemake-services/caddy-gen/releases/tag/0.3.0)!
+BREAKING CHANGES since [version 0.3.0](https://github.com/wemake-services/caddy-gen/releases/tag/0.3.0)!
 
 Options to configure:
 
@@ -57,7 +57,7 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro # needs socket to read events
-      - ./caddy-info:/data/caddy
+      - ./caddy-info:/data/caddy # needs volume to back up certificates
     ports:
       - "80:80"
       - "443:443"
