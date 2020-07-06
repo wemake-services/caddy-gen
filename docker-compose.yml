@@ -1,11 +1,12 @@
-version: "3"
+version: "3.8"
 services:
   caddy-gen:
-    container_name: caddy-gen
+    container_name: caddy2-gen
     build: .
     restart: always
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./caddy-info:/data/caddy
     ports:
       - "80:80"
       - "443:443"
@@ -16,11 +17,12 @@ services:
   whoami:
     image: "katacoda/docker-http-server:v1"
     labels:
-      - "virtual.host=127.0.0.1"
+      - "virtual.host=test1.localhost"
 
   whoami2:
     image: "katacoda/docker-http-server:v2"
     labels:
-      - "virtual.host=localhost"
-      - "virtual.port=80"
-      - "virtual.tls-email" # set to valid email to activate SSL
+      - "virtual.host=myapp.com" # your domain
+      - "virtual.alias=www.myapp.com" # alias for your domain (optional)
+      - "virtual.port=80" # exposed port of this container
+      - "virtual.tls-email=admin@myapp.com" # ssl is now on

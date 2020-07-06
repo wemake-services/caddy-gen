@@ -20,7 +20,7 @@ Now scaling is easy!
 
 ## CADDY 2
 
-BREAKING CHANGES HERE!
+BREAKING CHANGES since [version 0.30.0](https://github.com/wemake-services/caddy-gen/releases/tag/0.3.0)!
 
 Options to configure:
 
@@ -37,7 +37,12 @@ Password should be a string `base64` encoded from `bcrypt` hash. You can use htt
 
 To backup certificates make a volume:
 
-`./caddy-info:/data/caddy`
+```yaml
+services:
+  caddy:
+    volumes:
+      - ./caddy-info:/data/caddy
+```
 
 ## Usage
 
@@ -52,8 +57,7 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro # needs socket to read events
-      - ./certs/acme:/etc/caddy/acme # to save acme
-      - ./certs/ocsp:/etc/caddy/ocsp # to save certificates
+      - ./caddy-info:/data/caddy
     ports:
       - "80:80"
       - "443:443"
@@ -63,13 +67,12 @@ services:
   whoami: # this is your service
     image: "katacoda/docker-http-server:v2"
     labels:
-      - "virtual.host=myapp.com example.com" # your domains separated with a space
+      - "virtual.host=myapp.com" # your domain
       - "virtual.alias=www.myapp.com" # alias for your domain (optional)
       - "virtual.port=80" # exposed port of this container
       - "virtual.tls-email=admin@myapp.com" # ssl is now on
-      - "virtual.websockets" # enable websocket passthrough
       - "virtual.auth.username=admin" # Optionally add http basic authentication
-      - "virtual.auth.password=1234" # By specifying both username and password
+      - "virtual.auth.password=JDJ5JDEyJEJCdzJYM0pZaWtMUTR4UVBjTnRoUmVJeXQuOC84QTdMNi9ONnNlbDVRcHltbjV3ME1pd2pLCg==" # By specifying both username and password hash
 ```
 
 Or see [`docker-compose.yml`](https://github.com/wemake-services/caddy-gen/blob/master/docker-compose.yml) example file.
@@ -87,9 +90,8 @@ There are several options to configure:
 - `virtual.host` is basically a domain name, see [`Caddy` docs](https://caddyserver.com/docs/proxy)
 - `virtual.alias` (optional) domain alias, useful for `www` prefix with redirect. For example `www.myapp.com`. Alias will always redirect to the host above.
 - `virtual.port` exposed port of the container
-- `virtual.tls-email` could be empty, unset or set to [valid email](https://caddyserver.com/docs/tls)
-- `virtual.tls` (alias of `virtual.tls-email`) could be empty, unset or set to a [valid set of tls directive value(s)](https://caddyserver.com/docs/tls)
-- `virtual.websocket` when set, enables websocket connection passthrough
+- `virtual.tls-email` could be empty, unset or set to [valid email](https://caddyserver.com/docs/caddyfile/directives/tls)
+- `virtual.tls` (alias of `virtual.tls-email`) could be empty, unset or set to a [valid set of tls directive value(s)](https://caddyserver.com/docs/caddyfile/directives/tls)
 - `virtual.auth.username` when set, along with `virtual.auth.password`, http basic authentication is enabled
 - `virtual.auth.password` needs to be specified, along with `virtual.auth.usernmae`, to enable http basic authentication
 
@@ -97,14 +99,19 @@ Note, that options should not differ for containers of a single service.
 
 ### Backing up certificates
 
-Certificates are stored in `/etc/caddy/acme/` and `/etc/caddy/ocsp` folders.
-Make them `volume`s to save them on your host machine.
+To backup certificates make a volume:
+
+```yaml
+services:
+  caddy:
+    volumes:
+      - ./caddy-info:/data/caddy
+```
 
 ### Versions
 
-This image supports three [build-time](https://docs.docker.com/engine/reference/commandline/build/#set-build-time-variables-build-arg) arguments:
+This image supports two [build-time](https://docs.docker.com/engine/reference/commandline/build/#set-build-time-variables-build-arg) arguments:
 
-- `CADDY_VERSION` to change the current version of [`Caddy`](https://github.com/mholt/caddy/releases)
 - `FOREGO_VERSION` to change the current version of [`forego`](https://github.com/jwilder/forego/releases)
 - `DOCKER_GEN_VERSION` to change the current version of [`docker-gen`](https://github.com/jwilder/docker-gen/releases)
 
