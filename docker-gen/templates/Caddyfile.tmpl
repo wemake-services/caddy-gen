@@ -3,8 +3,10 @@
 {{ if not $hosts }}
 
 127.0.0.1:2015
-log stdout
-errors stderr
+log {
+    output stdout
+}
+
 
 {{ else }}
 
@@ -16,6 +18,7 @@ errors stderr
 {{ $tlsConfig := trim (index $c.Labels "virtual.tls") }}
 {{ $tlsEnv := or $tlsEmail $tlsConfig }}
 {{ $tlsOff := eq $tlsEnv "" }}
+{{ $tlsOn := ne $tlsEnv "" }}
 {{ $alias := trim (index $c.Labels "virtual.alias") }}
 {{ $aliasPresent := ne $alias "" }}
 {{ $authUsername := trim (index $c.Labels "virtual.auth.username") }}
@@ -29,27 +32,27 @@ errors stderr
 {{ end }}
 
 {{ if $tlsOff }}http://{{ end }}{{ $host }} {
-  tls {{ if $tlsOff }}off{{ else }}{{ $tlsEnv }}{{ end }}
+  {{ if $tlsOn }}tls {{ $tlsEnv }}{{ end }}
 
   {{ if $basicauth }}
-  basicauth / {{ $authUsername }} {{ $authPassword }}
+  basicauth / {
+      {{ $authUsername }} {{ $authPassword }}
+  }
   {{ end }}
-  proxy / {
-    policy round_robin
-    transparent
-    {{ if contains $c.Labels "virtual.websockets" }}websocket{{ end }}
-
+  reverse_proxy {
+    lb_policy round_robin
     {{ range $i, $container := $containers }}
     {{ range $j, $net := $container.Networks }}
     {{ $port := index $container.Labels "virtual.port" }}
-    upstream {{ $net.IP }}:{{ if $port }}{{ trim $port }}{{ else }}80{{ end }}
+    to {{ $net.IP }}:{{ if $port }}{{ trim $port }}{{ else }}80{{ end }}
     {{ end }}
     {{ end }}
   }
 
-  gzip
-  log stdout
-  errors stderr
+  encode zstd gzip
+  log {
+    output stdout
+  }
 }
 {{ end }}
 {{ end }}

@@ -10,7 +10,6 @@ A perfect mix of [`Caddy`](https://github.com/mholt/caddy), [`docker-gen`](https
 
 ---
 
-
 ## Why
 
 Using `Caddy` as your primary web server is super simple.
@@ -19,6 +18,26 @@ But when you need to scale your application Caddy is limited to its static confi
 To overcome this issue we are using `docker-gen` to generate configuration everytime a container spawns or dies.
 Now scaling is easy!
 
+## CADDY 2
+
+BREAKING CHANGES HERE!
+
+Options to configure:
+
+- `virtual.host` domain name, don't pass `http://` or `https://`, you can separate them with space,
+- `virtual.alias` domain alias, e.q. `www` prefix,
+- `virtual.port` port exposed by container, e.g. `3000` for React apps in development,
+- `virtual.tls-email` the email address to use for the ACME account managing the site's certificates,
+- `virtual.auth.username` and
+- `virtual.auth.password` together provide HTTP basic authentication.
+
+Password should be a string `base64` encoded from `bcrypt` hash. You can use https://bcrypt-generator.com/ with default config and https://www.base64encode.org/.
+
+## Backing up certificates
+
+To backup certificates make a volume:
+
+`./caddy-info:/data/caddy`
 
 ## Usage
 
@@ -32,29 +51,28 @@ services:
     image: "wemakeservices/caddy-gen:latest"
     restart: always
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro  # needs socket to read events
-      - ./certs/acme:/etc/caddy/acme  # to save acme
-      - ./certs/ocsp:/etc/caddy/ocsp  # to save certificates
+      - /var/run/docker.sock:/tmp/docker.sock:ro # needs socket to read events
+      - ./certs/acme:/etc/caddy/acme # to save acme
+      - ./certs/ocsp:/etc/caddy/ocsp # to save certificates
     ports:
       - "80:80"
       - "443:443"
     depends_on:
       - whoami
 
-  whoami:  # this is your service
+  whoami: # this is your service
     image: "katacoda/docker-http-server:v2"
     labels:
-      - "virtual.host=myapp.com example.com"  # your domains separated with a space
-      - "virtual.alias=www.myapp.com"  # alias for your domain (optional)
-      - "virtual.port=80"  # exposed port of this container
-      - "virtual.tls-email=admin@myapp.com"  # ssl is now on
+      - "virtual.host=myapp.com example.com" # your domains separated with a space
+      - "virtual.alias=www.myapp.com" # alias for your domain (optional)
+      - "virtual.port=80" # exposed port of this container
+      - "virtual.tls-email=admin@myapp.com" # ssl is now on
       - "virtual.websockets" # enable websocket passthrough
       - "virtual.auth.username=admin" # Optionally add http basic authentication
       - "virtual.auth.password=1234" # By specifying both username and password
 ```
 
 Or see [`docker-compose.yml`](https://github.com/wemake-services/caddy-gen/blob/master/docker-compose.yml) example file.
-
 
 ## Configuration
 
@@ -65,6 +83,7 @@ Every labeled service exposes a `virtual.host` to be handled.
 Then, every container represents a single `upstream` to serve requests.
 
 There are several options to configure:
+
 - `virtual.host` is basically a domain name, see [`Caddy` docs](https://caddyserver.com/docs/proxy)
 - `virtual.alias` (optional) domain alias, useful for `www` prefix with redirect. For example `www.myapp.com`. Alias will always redirect to the host above.
 - `virtual.port` exposed port of the container
@@ -89,18 +108,15 @@ This image supports three [build-time](https://docs.docker.com/engine/reference/
 - `FOREGO_VERSION` to change the current version of [`forego`](https://github.com/jwilder/forego/releases)
 - `DOCKER_GEN_VERSION` to change the current version of [`docker-gen`](https://github.com/jwilder/docker-gen/releases)
 
-
 ## See also
 
 - Raw `Caddy` [image](https://github.com/wemake-services/caddy-docker)
 - [Django project template](https://github.com/wemake-services/wemake-django-template) with `Caddy`
 - Tool to limit your `docker` [image size](https://github.com/wemake-services/docker-image-size-limit)
 
-
 ## Changelog
 
 Full changelog is available [here](https://github.com/wemake-services/caddy-gen/blob/master/CHANGELOG.md).
-
 
 ## License
 
