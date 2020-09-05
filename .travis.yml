@@ -12,6 +12,7 @@ install:
   # Building image itself:
   - docker build -t caddy-gen:latest .
   - docker run -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock:ro --name caddy-gen caddy-gen
+  - sleep 1
 
 script:
   - docker ps | grep -q caddy-gen # there should be a docker process
