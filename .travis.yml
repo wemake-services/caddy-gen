@@ -16,8 +16,10 @@ install:
 
 script:
   - docker ps | grep -q caddy-gen # there should be a docker process
+
   - http_code=$(curl -s -w "%{http_code}" 127.0.0.1 | tail -n 1)
   - test $http_code -eq 308
+
   - disl caddy-gen:latest 90MB
 
 notifications:
