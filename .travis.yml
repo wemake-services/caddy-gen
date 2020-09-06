@@ -11,7 +11,7 @@ install:
   - pip install docker-image-size-limit
   # Building image itself:
   - docker build -t caddy-gen:latest .
-  - docker run -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock:ro --name caddy-gen caddy-gen
+  - docker run -d -p 80:80 -p 2015:2015 -v /var/run/docker.sock:/tmp/docker.sock:ro --name caddy-gen caddy-gen
   - sleep 1
 
 script:
@@ -19,6 +19,11 @@ script:
 
   - http_code=$(curl -s -w "%{http_code}" 127.0.0.1 | tail -n 1)
   - test $http_code -eq 308
+
+  - curl 127.0.0.1:2015
+
+  - http_code=$(curl -s -w "%{http_code}" 127.0.0.1:2015 | tail -n 1)
+  - test $http_code -eq 404
 
   - disl caddy-gen:latest 90MB
 
