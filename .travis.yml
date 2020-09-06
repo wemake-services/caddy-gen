@@ -20,7 +20,7 @@ script:
   - http_code=$(curl -s -w "%{http_code}" 127.0.0.1 | tail -n 1)
   - test $http_code -eq 308
 
-  - curl 127.0.0.1:2015
+  - curl -vvv 127.0.0.1:2015
 
   - http_code=$(curl -s -w "%{http_code}" 127.0.0.1:2015 | tail -n 1)
   - test $http_code -eq 404
