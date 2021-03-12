@@ -23,6 +23,7 @@ log {
 {{ $aliasPresent := ne $alias "" }}
 {{ $authUsername := trim (index $c.Labels "virtual.auth.username") }}
 {{ $authPassword := trim (index $c.Labels "virtual.auth.password") }}
+{{ $authPath := trim (index $c.Labels "virtual.auth.path") }}
 {{ $basicauth := and (ne $authUsername "") (ne $authPassword "") }}
 
 {{ if $aliasPresent  }}
@@ -35,7 +36,7 @@ log {
   {{ if $tlsOn }}tls {{ $tlsEnv }}{{ end }}
 
   {{ if $basicauth }}
-  basicauth / {
+  basicauth {{ $authPath }} {
       {{ $authUsername }} {{ $authPassword }}
   }
   {{ end }}
