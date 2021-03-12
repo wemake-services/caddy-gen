@@ -28,6 +28,7 @@ Options to configure:
 - `virtual.alias` domain alias, e.q. `www` prefix,
 - `virtual.port` port exposed by container, e.g. `3000` for React apps in development,
 - `virtual.tls-email` the email address to use for the ACME account managing the site's certificates,
+- `virtual.auth.path` with
 - `virtual.auth.username` and
 - `virtual.auth.password` together provide HTTP basic authentication.
 
@@ -71,6 +72,7 @@ services:
       - "virtual.alias=www.myapp.com" # alias for your domain (optional)
       - "virtual.port=80" # exposed port of this container
       - "virtual.tls-email=admin@myapp.com" # ssl is now on
+      - "virtual.auth.path=/secret/*" # path basic authnetication applys to
       - "virtual.auth.username=admin" # Optionally add http basic authentication
       - "virtual.auth.password=JDJ5JDEyJEJCdzJYM0pZaWtMUTR4UVBjTnRoUmVJeXQuOC84QTdMNi9ONnNlbDVRcHltbjV3ME1pd2pLCg==" # By specifying both username and password hash
 ```
@@ -92,8 +94,9 @@ There are several options to configure:
 - `virtual.port` exposed port of the container
 - `virtual.tls-email` could be empty, unset or set to [valid email](https://caddyserver.com/docs/caddyfile/directives/tls)
 - `virtual.tls` (alias of `virtual.tls-email`) could be empty, unset or set to a [valid set of tls directive value(s)](https://caddyserver.com/docs/caddyfile/directives/tls)
-- `virtual.auth.username` when set, along with `virtual.auth.password`, http basic authentication is enabled
-- `virtual.auth.password` needs to be specified, along with `virtual.auth.usernmae`, to enable http basic authentication
+- `virtual.auth.username` when set, along with `virtual.auth.password` and `virtual.auth.path`, http basic authentication is enabled
+- `virtual.auth.password` needs to be specified, along with `virtual.auth.usernmae`, to enable http [basic authentication](https://caddyserver.com/docs/caddyfile/directives/basicauth)
+- `virtual.auth.path` sets path basic auth applys to.
 
 Note, that options should not differ for containers of a single service.
 
