@@ -25,6 +25,13 @@ log {
 {{ $authPassword := trim (index $c.Labels "virtual.auth.password") }}
 {{ $authPath := trim (index $c.Labels "virtual.auth.path") }}
 {{ $basicauth := and (ne $authUsername "") (ne $authPassword "") }}
+{{ $staticRoot := trim (index $c.Labels "virtual.static.root") }}
+{{ $staticMatcher := trim (index $c.Labels "virtual.static.matcher") }}
+{{ $staticHide := trim (index $c.Labels "virtual.static.hide") }}
+{{ $staticIndex := trim (index $c.Labels "virtual.static.index") }}
+{{ $staticBrowse := trim (index $c.Labels "virtual.static.browse") }}
+{{ $noProxy := eq (trim (index $c.Labels "virtual.noProxy")) "true" }}
+{{ $proxyMatcher := trim (index $c.Labels "virtual.proxy.matcher") }}
 
 {{ if $aliasPresent  }}
 {{ if $tlsOff }}http://{{ end }}{{ $alias }} {
@@ -40,7 +47,19 @@ log {
       {{ $authUsername }} {{ $authPassword }}
   }
   {{ end }}
-  reverse_proxy {
+
+  {{ if ne $staticRoot "" }}
+  root * {{ $staticRoot }}
+  templates
+  file_server {{ $staticMatcher }} {
+    {{ if ne $staticHide "" }}hide {{ $staticHide }}{{ end }}
+    {{ if ne $staticIndex "" }}index {{ $staticIndex }}{{ end }}
+    {{ if ne $staticBrowse "" }}browse{{ end }}
+  }
+  {{ end }}
+
+  {{ if not $noProxy }}
+  reverse_proxy {{ $proxyMatcher }} {
     lb_policy round_robin
     {{ range $i, $container := $containers }}
     {{ range $j, $net := $container.Networks }}
@@ -49,6 +68,7 @@ log {
     {{ end }}
     {{ end }}
   }
+  {{ end }}
 
   encode zstd gzip
   log {
