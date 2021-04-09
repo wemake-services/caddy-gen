@@ -34,6 +34,23 @@ Options to configure:
 
 Password should be a string `base64` encoded from `bcrypt` hash. You can use https://bcrypt-generator.com/ with default config and https://www.base64encode.org/.
 
+To include a custom template:
+- set the environment variable CADDY_SNIPPET to a file containining your custom
+  Caddyfile template.
+- pass your file into the container at the path specified by envvar CADDY_SNIPPET
+- it will be appended to the existing template when the container loads.
+
+Example:
+
+```yaml
+services:
+  caddy-gen:
+    volumes:
+      - ./caddy:/tmp/caddy
+    environment:
+      CADDY_SNIPPET: /tmp/caddy/snippet
+```
+
 ## Backing up certificates
 
 To backup certificates make a volume:
