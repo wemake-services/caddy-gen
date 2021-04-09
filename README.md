@@ -34,6 +34,16 @@ Options to configure:
 
 Password should be a string `base64` encoded from `bcrypt` hash. You can use https://bcrypt-generator.com/ with default config and https://www.base64encode.org/.
 
+Static file server options (see [Caddy file_server docs](https://caddyserver.com/docs/caddyfile/directives/file_server#syntax)):
+- `virtual.static.root`
+- `virtual.static.matcher` 
+- `virtual.static.hide`
+- `virtual.static.index`
+- `virtual.static.browse` enabled if "true", otherwise disabled
+- `virtual.noProxy` when "true", disable reverse proxy for the domain, useful
+  when domain only serves static files. Otherwise, use
+- `virtual.proxy.matcher` to route certain paths to the proxy, such as `/api/*`
+
 ## Backing up certificates
 
 To backup certificates make a volume:
@@ -72,7 +82,7 @@ services:
       - "virtual.alias=www.myapp.com" # alias for your domain (optional)
       - "virtual.port=80" # exposed port of this container
       - "virtual.tls-email=admin@myapp.com" # ssl is now on
-      - "virtual.auth.path=/secret/*" # path basic authnetication applys to
+      - "virtual.auth.path=/secret/*" # path basic authentication applies to
       - "virtual.auth.username=admin" # Optionally add http basic authentication
       - "virtual.auth.password=JDJ5JDEyJEJCdzJYM0pZaWtMUTR4UVBjTnRoUmVJeXQuOC84QTdMNi9ONnNlbDVRcHltbjV3ME1pd2pLCg==" # By specifying both username and password hash
 ```
@@ -96,7 +106,7 @@ There are several options to configure:
 - `virtual.tls` (alias of `virtual.tls-email`) could be empty, unset or set to a [valid set of tls directive value(s)](https://caddyserver.com/docs/caddyfile/directives/tls)
 - `virtual.auth.username` when set, along with `virtual.auth.password` and `virtual.auth.path`, http basic authentication is enabled
 - `virtual.auth.password` needs to be specified, along with `virtual.auth.usernmae`, to enable http [basic authentication](https://caddyserver.com/docs/caddyfile/directives/basicauth)
-- `virtual.auth.path` sets path basic auth applys to.
+- `virtual.auth.path` sets path basic auth applies to.
 
 Note, that options should not differ for containers of a single service.
 
