@@ -1,5 +1,6 @@
 #!/bin/bash
 set -o errexit
+set -o xtrace
 
 # there should be a docker process
 docker ps | grep -q caddy-gen
