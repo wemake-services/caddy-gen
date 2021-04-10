@@ -12,10 +12,12 @@ disl caddy-gen:latest 90MB
 printf "http://test-template.localhost {\n  respond \"template\"\n}\n" > template.tmpl
 docker cp template.tmpl caddy-gen:/tmp/template.tmpl
 docker exec caddy-gen sh -c "export CADDY_TEMPLATE=/tmp/template.tmpl && sh /code/docker-entrypoint.sh"
+sleep 1
 test "$(curl 0.0.0.0:80 -s -H 'Host: test-template.localhost')" == "template"
 # test feature CADDY_SNIPPET
 printf "http://test-snippet.localhost {\n  respond \"snippet\"\n}\n" > snippet.tmpl
 docker cp snippet.tmpl caddy-gen:/tmp/snippet.tmpl
 docker exec caddy-gen sh -c "export CADDY_TEMPLATE=/tmp/template.tmpl CADDY_SNIPPET=/tmp/snippet.tmpl && sh /code/docker-entrypoint.sh"
+sleep 1
 test "$(curl 0.0.0.0:80 -s -H 'Host: test-template.localhost')" == "template"
 test "$(curl 0.0.0.0:80 -s -H 'Host: test-snippet.localhost')" == "snippet"
