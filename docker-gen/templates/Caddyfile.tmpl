@@ -26,6 +26,8 @@
 {{ $authPassword := trim (index $c.Labels "virtual.auth.password") }}
 {{ $authPath := trim (index $c.Labels "virtual.auth.path") }}
 {{ $basicauth := and (ne $authUsername "") (ne $authPassword "") }}
+{{ $hostDirectives := trim (index $c.Labels "virtual.host.directives") }}
+{{ $hostImport := trim (index $c.Labels "virtual.host.import") }}
 {{ $proxyMatcher := trim (index $c.Labels "virtual.proxy.matcher") }}
 {{ $proxyDirectives := trim (index $c.Labels "virtual.proxy.directives") }}
 {{ $proxyLBPolicy := or (trim (index $c.Labels "virtual.proxy.lb_policy")) "round_robin" }}
@@ -39,6 +41,9 @@
 
 {{ if $tlsOff }}http://{{ end }}{{ $host }} {
   {{ if $tlsOn }}tls {{ $tlsEnv }}{{ end }}
+
+  {{ $hostDirectives }}
+  {{ if $hostImport }}import {{ $hostImport }}{{ end }}
 
   {{ if $basicauth }}
   basicauth {{ $authPath }} {

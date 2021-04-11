@@ -28,6 +28,8 @@ Main options to configure:
 - `virtual.alias` domain alias, e.q. `www` prefix,
 - `virtual.port` port exposed by container, e.g. `3000` for React apps in development,
 - `virtual.tls-email` the email address to use for the ACME account managing the site's certificates,
+- `virtual.host.directives` set custom [Caddyfile directives](https://caddyserver.com/docs/caddyfile/directives) for the host. Separate multiple directives with newline characters ("\n").
+- `virtual.host.import` import Caddyfile directives for the host from a file on the container's filesystem.
 
 Basic authentication options:
 - `virtual.auth.path` with
