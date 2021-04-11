@@ -40,7 +40,10 @@ To include a custom template:
 - set the environment variable `CADDY_TEMPLATE` to the mounted file containining
   your custom Caddyfile template. This will replace the default template.
 - set the environment variable `CADDY_SNIPPET` to the mounted file containining
-  your custom Caddyfile snippet. This will be appended to the caddy template.
+  your custom Caddyfile snippet. This will be prepended to the caddy template,
+  so you may use it to set [Global Options](https://caddyserver.com/docs/caddyfile/options),
+  define [snippet blocks](https://caddyserver.com/docs/caddyfile/concepts#snippets),
+  or [add custom address blocks](https://caddyserver.com/docs/caddyfile/concepts).
 
 Example:
 
@@ -53,7 +56,7 @@ services:
     environment:
       # CADDY_TEMPLATE will replace the default caddy template
       CADDY_TEMPLATE: /tmp/caddy/template
-      # CADDY_SNIPPET will append to the caddy template
+      # CADDY_SNIPPET will prepend to the caddy template
       CADDY_SNIPPET: /tmp/caddy/snippet
 ```
 
