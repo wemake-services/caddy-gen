@@ -7,11 +7,11 @@ services:
   - docker
 
 install:
-  - bash test/setup
+  - sh test/setup
 
 script:
-  - sleep 5 # wait for container to start
-  - bash test/run
+  - sleep 5  # wait for container to start
+  - sh test/run
 
 notifications:
   email:
