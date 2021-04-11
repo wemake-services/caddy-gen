@@ -22,17 +22,23 @@ Now scaling is easy!
 
 BREAKING CHANGES since [version 0.3.0](https://github.com/wemake-services/caddy-gen/releases/tag/0.3.0)!
 
-Options to configure:
+Main options to configure:
 
 - `virtual.host` domain name, don't pass `http://` or `https://`, you can separate them with space,
 - `virtual.alias` domain alias, e.q. `www` prefix,
 - `virtual.port` port exposed by container, e.g. `3000` for React apps in development,
 - `virtual.tls-email` the email address to use for the ACME account managing the site's certificates,
+
+Basic authentication options:
 - `virtual.auth.path` with
 - `virtual.auth.username` and
-- `virtual.auth.password` together provide HTTP basic authentication.
+- `virtual.auth.password` together provide HTTP basic authentication. (Password should be a string `base64` encoded from `bcrypt` hash. You can use https://bcrypt-generator.com/ with default config and https://www.base64encode.org/.)
 
-Password should be a string `base64` encoded from `bcrypt` hash. You can use https://bcrypt-generator.com/ with default config and https://www.base64encode.org/.
+Reverse proxy options:
+- `virtual.proxy.matcher` have the reverse proxy only match certain paths.
+- `virtual.proxy.lb_policy` specify load balancer policy, defaults to `round_robin`.
+- `virtual.proxy.directives` include any [reverse_proxy directives](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy). Separate multiple directives with newline characters ("\n").
+- `virtual.proxy.import` include any reverse_proxy directives from a file on the container's filesystem. See [Caddy import](https://caddyserver.com/docs/caddyfile/directives/import)
 
 To include a custom template:
 - mount a volume containing your custom template and/or snippet (they both may

@@ -26,6 +26,10 @@
 {{ $authPassword := trim (index $c.Labels "virtual.auth.password") }}
 {{ $authPath := trim (index $c.Labels "virtual.auth.path") }}
 {{ $basicauth := and (ne $authUsername "") (ne $authPassword "") }}
+{{ $proxyMatcher := trim (index $c.Labels "virtual.proxy.matcher") }}
+{{ $proxyDirectives := trim (index $c.Labels "virtual.proxy.directives") }}
+{{ $proxyLBPolicy := or (trim (index $c.Labels "virtual.proxy.lb_policy")) "round_robin" }}
+{{ $proxyImport := trim (index $c.Labels "virtual.proxy.import") }}
 
 {{ if $aliasPresent  }}
 {{ if $tlsOff }}http://{{ end }}{{ $alias }} {
@@ -41,12 +45,15 @@
       {{ $authUsername }} {{ $authPassword }}
   }
   {{ end }}
-  reverse_proxy {
-    lb_policy round_robin
+
+  reverse_proxy {{ $proxyMatcher }} {
+    lb_policy {{ $proxyLBPolicy }}
+    {{ $proxyDirectives }}
+    {{ if $proxyImport }}import {{ $proxyImport }}{{ end }}
     {{ range $i, $container := $containers }}
     {{ range $j, $net := $container.Networks }}
-    {{ $port := index $container.Labels "virtual.port" }}
-    to {{ $net.IP }}:{{ if $port }}{{ trim $port }}{{ else }}80{{ end }}
+    {{ $port := or (trim (index $container.Labels "virtual.port")) "80" }}
+    to {{ $net.IP }}:{{ $port }}
     {{ end }}
     {{ end }}
   }
