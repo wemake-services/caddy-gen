@@ -6,7 +6,7 @@ set -o nounset
 # caddy_template is by default set to the backup to avoid adding the snippet
 # multiple times to the same template, for example when a container restarts
 CADDY_TEMPLATE="${CADDY_TEMPLATE:-./docker-gen/templates/Caddyfile.bkp}"
-CADDY_SNIPPET="${CADDY_SNIPPET:-''}"
+CADDY_SNIPPET="${CADDY_SNIPPET:-}"
 
 # Create initial configuration:
 if [ -z "$CADDY_SNIPPET" ]; then
