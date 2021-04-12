@@ -101,7 +101,7 @@ services:
       - "virtual.auth.password=JDJ5JDEyJEJCdzJYM0pZaWtMUTR4UVBjTnRoUmVJeXQuOC84QTdMNi9ONnNlbDVRcHltbjV3ME1pd2pLCg==" # By specifying both username and password hash
 ```
 
-See [`docker-compose.yml`](https://github.com/wemake-services/caddy-gen/blob/master/docker-compose.yml) example file.
+See [`docker-compose.yml`](https://github.com/wemake-services/caddy-gen/blob/master/example/docker-compose.yml) example file.
 
 ### Backing up certificates
 
