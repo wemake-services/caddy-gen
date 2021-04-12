@@ -2,14 +2,17 @@ version: "3.8"
 services:
   caddy-gen:
     container_name: caddy2-gen
-    build: .
+    build: ..
     restart: always
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./caddy-info:/data/caddy
+      - ./caddy_global_options:/tmp/caddy_global_options
     ports:
       - "80:80"
       - "443:443"
+    environment:
+      CADDY_SNIPPET: /tmp/caddy_global_options
     depends_on:
       - whoami
       - whoami2
