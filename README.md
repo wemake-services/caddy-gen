@@ -185,7 +185,7 @@ With this custom template, Caddy-gen will act as a reverse proxy for service
 containers and store their logs under the appropriate host folder in
 `/var/logs`.
 
-```yaml
+```jinja
 # file: ./caddy/template
 (redirectHttps) {
   @http {
@@ -222,7 +222,9 @@ containers and store their logs under the appropriate host folder in
   encode zstd gzip
   import logFile
 }
+```
 
+```yaml
 # file: docker-compose.yml
 services:
   caddy-gen:
@@ -232,6 +234,32 @@ services:
     environment:
       # CADDY_TEMPLATE will replace the default caddy template
       CADDY_TEMPLATE: /tmp/caddy/template
+```
+
+### Set [global options](https://caddyserver.com/docs/caddyfile/options) for Caddy
+
+With this snippet, Caddy will request SSL certificates from the [Let's Encrypt
+staging environment](https://letsencrypt.org/docs/staging-environment/). This
+is [useful for testing](https://caddyserver.com/docs/automatic-https#testing)
+without running up against rate limits when you want to deploy.
+
+```jinja
+# file: ./caddy/global_options
+{
+  acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+}
+```
+
+```yaml
+# file: docker-compose.yml
+services:
+  caddy-gen:
+    volumes:
+      # mount the template file into the container
+      - ./caddy/global_options:/tmp/caddy/global_options
+    environment:
+      # CADDY_SNIPPET will prepend to the default caddy template
+      CADDY_SNIPPET: /tmp/caddy/global_options
 ```
 
 ## See also
