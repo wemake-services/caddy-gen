@@ -26,6 +26,7 @@ VOLUME /etc/caddy
 
 # Starting app:
 COPY . /code
+COPY ./docker-gen/templates/Caddyfile.tmpl /code/docker-gen/templates/Caddyfile.bkp
 WORKDIR /code
 
 ENTRYPOINT ["sh", "/code/docker-entrypoint.sh"]

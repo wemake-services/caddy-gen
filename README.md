@@ -34,6 +34,32 @@ Options to configure:
 
 Password should be a string `base64` encoded from `bcrypt` hash. You can use https://bcrypt-generator.com/ with default config and https://www.base64encode.org/.
 
+To include a custom template:
+- mount a volume containing your custom template and/or snippet (they both may
+  be Go templates and will be loaded by `docker-gen`).
+- set the environment variable `CADDY_TEMPLATE` to the mounted file containining
+  your custom Caddyfile template. This will replace the default template.
+- set the environment variable `CADDY_SNIPPET` to the mounted file containining
+  your custom Caddyfile snippet. This will be prepended to the caddy template,
+  so you may use it to set [Global Options](https://caddyserver.com/docs/caddyfile/options),
+  define [snippet blocks](https://caddyserver.com/docs/caddyfile/concepts#snippets),
+  or [add custom address blocks](https://caddyserver.com/docs/caddyfile/concepts).
+
+Example:
+
+```yaml
+services:
+  caddy-gen:
+    volumes:
+      # mount folder "caddy" that contains two files, "template" and "snippet"
+      - ./caddy:/tmp/caddy
+    environment:
+      # CADDY_TEMPLATE will replace the default caddy template
+      CADDY_TEMPLATE: /tmp/caddy/template
+      # CADDY_SNIPPET will prepend to the caddy template
+      CADDY_SNIPPET: /tmp/caddy/snippet
+```
+
 ## Backing up certificates
 
 To backup certificates make a volume:

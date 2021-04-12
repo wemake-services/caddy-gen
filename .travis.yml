@@ -7,17 +7,11 @@ services:
   - docker
 
 install:
-  # Adds dependencies:
-  - pip install docker-image-size-limit
-  # Building image itself:
-  - docker build -t caddy-gen:latest .
-  - docker run -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock:ro --name caddy-gen caddy-gen
+  - sh test/setup
 
 script:
-  - sleep 5
-  - docker ps | grep -q caddy-gen # there should be a docker process
-  - curl 127.0.0.1:80 # it should be available and return 404
-  - disl caddy-gen:latest 90MB
+  - sleep 5  # wait for container to start
+  - sh test/run
 
 notifications:
   email:
