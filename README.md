@@ -18,21 +18,36 @@ But when you need to scale your application Caddy is limited to its static confi
 To overcome this issue we are using `docker-gen` to generate configuration everytime a container spawns or dies.
 Now scaling is easy!
 
-## CADDY 2
+## Configuration / Options
 
-BREAKING CHANGES since [version 0.3.0](https://github.com/wemake-services/caddy-gen/releases/tag/0.3.0)!
+`caddy-gen` is configured with [`labels`](https://docs.docker.com/engine/userguide/labels-custom-metadata/).
 
-Options to configure:
+The main idea is simple.
+Every labeled service exposes a `virtual.host` to be handled.
+Then, every container represents a single `upstream` to serve requests.
 
-- `virtual.host` domain name, don't pass `http://` or `https://`, you can separate them with space,
-- `virtual.alias` domain alias, e.q. `www` prefix,
-- `virtual.port` port exposed by container, e.g. `3000` for React apps in development,
-- `virtual.tls-email` the email address to use for the ACME account managing the site's certificates,
+NOTE: Caddy2 was introduced in [version 0.3.0](https://github.com/wemake-services/caddy-gen/releases/tag/0.3.0) causing BREAKING CHANGES.
+
+Main configuration options:
+
+- `virtual.host` (required) domain name, don't pass `http://` or `https://`, you can separate them with spaces.
+- `virtual.alias` domain alias, useful for `www` prefix with redirect. For example `www.myapp.com`. Alias will always redirect to the host above.
+- `virtual.port` port exposed by container, e.g. `3000` for React apps in development.
+- `virtual.tls-email` the email address to use for the ACME account managing the site's certificates (required to enable HTTPS).
+- `virtual.tls` alias of `virtual.tls-email`.
+- `virtual.host.directives` set custom [Caddyfile directives](https://caddyserver.com/docs/caddyfile/directives) for the host. These will be inlined into the site block.
+- `virtual.host.import` include Caddyfile directives for the host from a file on the container's filesystem. See [Caddy import](https://caddyserver.com/docs/caddyfile/directives/import).
+
+[Basic authentication](https://caddyserver.com/docs/caddyfile/directives/basicauth) options:
 - `virtual.auth.path` with
 - `virtual.auth.username` and
-- `virtual.auth.password` together provide HTTP basic authentication.
+- `virtual.auth.password` together enable HTTP basic authentication. (Password should be a string `base64` encoded from `bcrypt` hash. You can use https://bcrypt-generator.com/ with default config and https://www.base64encode.org/.)
 
-Password should be a string `base64` encoded from `bcrypt` hash. You can use https://bcrypt-generator.com/ with default config and https://www.base64encode.org/.
+[Reverse proxy](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy) options:
+- `virtual.proxy.matcher` have the reverse proxy only match certain paths.
+- `virtual.proxy.lb_policy` specify load balancer policy, defaults to `round_robin`.
+- `virtual.proxy.directives` include any reverse_proxy directives. These will be inlined into the reverse proxy block.
+- `virtual.proxy.import` include any reverse_proxy directives from a file on the container's filesystem. See [Caddy import](https://caddyserver.com/docs/caddyfile/directives/import).
 
 To include a custom template:
 - mount a volume containing your custom template and/or snippet (they both may
@@ -44,36 +59,19 @@ To include a custom template:
   so you may use it to set [Global Options](https://caddyserver.com/docs/caddyfile/options),
   define [snippet blocks](https://caddyserver.com/docs/caddyfile/concepts#snippets),
   or [add custom address blocks](https://caddyserver.com/docs/caddyfile/concepts).
+- See [example "Use a custom Caddy template for `docker-gen`"](#use-a-custom-caddy-template-for-docker-gen)
 
-Example:
+### Version build-time arguments
 
-```yaml
-services:
-  caddy-gen:
-    volumes:
-      # mount folder "caddy" that contains two files, "template" and "snippet"
-      - ./caddy:/tmp/caddy
-    environment:
-      # CADDY_TEMPLATE will replace the default caddy template
-      CADDY_TEMPLATE: /tmp/caddy/template
-      # CADDY_SNIPPET will prepend to the caddy template
-      CADDY_SNIPPET: /tmp/caddy/snippet
-```
+This image supports two [build-time](https://docs.docker.com/engine/reference/commandline/build/#set-build-time-variables-build-arg) arguments:
 
-## Backing up certificates
-
-To backup certificates make a volume:
-
-```yaml
-services:
-  caddy:
-    volumes:
-      - ./caddy-info:/data/caddy
-```
+- `FOREGO_VERSION` to change the current version of [`forego`](https://github.com/jwilder/forego/releases)
+- `DOCKER_GEN_VERSION` to change the current version of [`docker-gen`](https://github.com/jwilder/docker-gen/releases)
 
 ## Usage
 
-This image is created to be used in a single container.
+Caddy-gen is created to be used in a single container. It will act as a reverse
+proxy for the whoami service.
 
 ```yaml
 version: "3"
@@ -98,33 +96,12 @@ services:
       - "virtual.alias=www.myapp.com" # alias for your domain (optional)
       - "virtual.port=80" # exposed port of this container
       - "virtual.tls-email=admin@myapp.com" # ssl is now on
-      - "virtual.auth.path=/secret/*" # path basic authnetication applys to
+      - "virtual.auth.path=/secret/*" # path basic authentication applies to
       - "virtual.auth.username=admin" # Optionally add http basic authentication
       - "virtual.auth.password=JDJ5JDEyJEJCdzJYM0pZaWtMUTR4UVBjTnRoUmVJeXQuOC84QTdMNi9ONnNlbDVRcHltbjV3ME1pd2pLCg==" # By specifying both username and password hash
 ```
 
-Or see [`docker-compose.yml`](https://github.com/wemake-services/caddy-gen/blob/master/docker-compose.yml) example file.
-
-## Configuration
-
-`caddy-gen` is configured with [`labels`](https://docs.docker.com/engine/userguide/labels-custom-metadata/).
-
-The main idea is simple.
-Every labeled service exposes a `virtual.host` to be handled.
-Then, every container represents a single `upstream` to serve requests.
-
-There are several options to configure:
-
-- `virtual.host` is basically a domain name, see [`Caddy` docs](https://caddyserver.com/docs/proxy)
-- `virtual.alias` (optional) domain alias, useful for `www` prefix with redirect. For example `www.myapp.com`. Alias will always redirect to the host above.
-- `virtual.port` exposed port of the container
-- `virtual.tls-email` could be empty, unset or set to [valid email](https://caddyserver.com/docs/caddyfile/directives/tls)
-- `virtual.tls` (alias of `virtual.tls-email`) could be empty, unset or set to a [valid set of tls directive value(s)](https://caddyserver.com/docs/caddyfile/directives/tls)
-- `virtual.auth.username` when set, along with `virtual.auth.password` and `virtual.auth.path`, http basic authentication is enabled
-- `virtual.auth.password` needs to be specified, along with `virtual.auth.usernmae`, to enable http [basic authentication](https://caddyserver.com/docs/caddyfile/directives/basicauth)
-- `virtual.auth.path` sets path basic auth applys to.
-
-Note, that options should not differ for containers of a single service.
+See [`docker-compose.yml`](https://github.com/wemake-services/caddy-gen/blob/master/docker-compose.yml) example file.
 
 ### Backing up certificates
 
@@ -137,12 +114,153 @@ services:
       - ./caddy-info:/data/caddy
 ```
 
-### Versions
+### Add or modify reverse_proxy headers 
 
-This image supports two [build-time](https://docs.docker.com/engine/reference/commandline/build/#set-build-time-variables-build-arg) arguments:
+With the following settings, the upstream host will see its own address instead
+of the original incoming value. See [Headers](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy#headers).
 
-- `FOREGO_VERSION` to change the current version of [`forego`](https://github.com/jwilder/forego/releases)
-- `DOCKER_GEN_VERSION` to change the current version of [`docker-gen`](https://github.com/jwilder/docker-gen/releases)
+```yaml
+version: "3"
+services:
+  caddy-gen:
+    image: "wemakeservices/caddy-gen:latest"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro # needs socket to read events
+      - ./caddy-info:/data/caddy # needs volume to back up certificates
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - whoami
+
+  whoami:
+    image: "katacoda/docker-http-server:v2"
+    labels:
+      virtual.host: myapp.com
+      virtual.port: 80
+      virtual.tls: admin@myapp.com
+      virtual.proxy.directives: |
+        header_up Host {http.reverse_proxy.upstream.hostport}
+```
+
+### Set up a static file server for a host
+
+With the following settings, myapp.com will serve files from directory `www`
+and only requests to `/api/*` will be routed to the whoami service.  See
+[file_server](https://caddyserver.com/docs/caddyfile/directives/file_server).
+
+```yaml
+version: "3"
+services:
+  caddy-gen:
+    image: "wemakeservices/caddy-gen:latest"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro # needs socket to read events
+      - ./caddy-info:/data/caddy # needs volume to back up certificates
+      - ./www:/srv/myapp/www # files served by myapp.com
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - whoami
+
+  whoami:
+    image: "katacoda/docker-http-server:v2"
+    labels:
+      virtual.host: myapp.com
+      virtual.port: 80
+      virtual.tls: admin@myapp.com
+      virtual.proxy.matcher: /api/*
+      virtual.host.directives: |
+        root * /srv/myapp/www
+        templates
+        file_server
+```
+
+### Use a custom Caddy template for `docker-gen`
+
+With this custom template, Caddy-gen will act as a reverse proxy for service
+containers and store their logs under the appropriate host folder in
+`/var/logs`.
+
+```jinja
+# file: ./caddy/template
+(redirectHttps) {
+  @http {
+    protocol http
+  }
+  redir @http https://{host}{uri}
+}
+
+(logFile) {
+  log {
+    output file /var/caddy/{host}/logs {
+      roll_keep_for 7
+    }
+  }
+}
+
+{{ $hosts := groupByLabel $ "virtual.host" }}
+{{ range $h, $containers := $hosts }}
+{{ range $t, $host := split (trim (index $c.Labels "virtual.host")) " " }}
+{{ $tls = trim (index $c.Labels "virtual.tls") }}
+{{ $host }} {
+  {{ if $tls }}
+  tls {{ $tls }}
+  import redirectHttps
+  {{ end }}
+  reverse_proxy {
+    lb_policy round_robin
+    {{ range $i, $container := $containers }}
+    {{ range $j, $net := $container.Networks }}
+    to {{ $net.IP}}:{{ or (trim (index $container.Labels "virtual.port")) "80" }}
+    {{ end }}
+    {{ end }}
+  }
+  encode zstd gzip
+  import logFile
+}
+```
+
+```yaml
+# file: docker-compose.yml
+services:
+  caddy-gen:
+    volumes:
+      # mount the template file into the container
+      - ./caddy/template:/tmp/caddy/template
+    environment:
+      # CADDY_TEMPLATE will replace the default caddy template
+      CADDY_TEMPLATE: /tmp/caddy/template
+```
+
+### Set [global options](https://caddyserver.com/docs/caddyfile/options) for Caddy
+
+With this snippet, Caddy will request SSL certificates from the [Let's Encrypt
+staging environment](https://letsencrypt.org/docs/staging-environment/). This
+is [useful for testing](https://caddyserver.com/docs/automatic-https#testing)
+without running up against rate limits when you want to deploy.
+
+```jinja
+# file: ./caddy/global_options
+{
+  acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+}
+```
+
+```yaml
+# file: docker-compose.yml
+services:
+  caddy-gen:
+    volumes:
+      # mount the template file into the container
+      - ./caddy/global_options:/tmp/caddy/global_options
+    environment:
+      # CADDY_SNIPPET will prepend to the default caddy template
+      CADDY_SNIPPET: /tmp/caddy/global_options
+```
 
 ## See also
 
