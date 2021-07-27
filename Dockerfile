@@ -2,7 +2,7 @@ FROM caddy:2.4.3-alpine
 
 ARG DOCKER_GEN_VERSION="0.7.4"
 ARG FOREGO_VERSION="0.16.1"
-
+ARG DOCKER_PLATFORM
 
 ENV CADDYPATH="/etc/caddy"
 ENV DOCKER_HOST="unix:///tmp/docker.sock"
@@ -16,9 +16,9 @@ RUN apk update && apk upgrade \
   && mv ./forego /usr/bin/forego \
   && chmod u+x /usr/bin/forego \
   # Install docker-gen
-  && wget --quiet "https://github.com/jwilder/docker-gen/releases/download/${DOCKER_GEN_VERSION}/docker-gen-alpine-linux-amd64-${DOCKER_GEN_VERSION}.tar.gz" \
-  && tar -C /usr/bin -xvzf "docker-gen-alpine-linux-amd64-${DOCKER_GEN_VERSION}.tar.gz" \
-  && rm "docker-gen-alpine-linux-amd64-${DOCKER_GEN_VERSION}.tar.gz" \
+  && wget --quiet "https://github.com/jwilder/docker-gen/releases/download/${DOCKER_GEN_VERSION}/docker-gen-alpine-linux-${DOCKER_PLATFORM}-${DOCKER_GEN_VERSION}.tar.gz" \
+  && tar -C /usr/bin -xvzf "docker-gen-alpine-linux-${DOCKER_PLATFORM}-${DOCKER_GEN_VERSION}.tar.gz" \
+  && rm "docker-gen-alpine-linux-${DOCKER_PLATFORM}-${DOCKER_GEN_VERSION}.tar.gz" \
   && apk del .build-dependencies
 
 EXPOSE 80 443 2015
