@@ -1,8 +1,7 @@
-FROM caddy:2.5.0-alpine
+FROM caddy:2.5.1-alpine
 
-ARG DOCKER_GEN_VERSION="0.7.4"
+ARG DOCKER_GEN_VERSION="0.9.0"
 ARG FOREGO_VERSION="0.16.1"
-
 
 ENV CADDYPATH="/etc/caddy"
 ENV DOCKER_HOST="unix:///tmp/docker.sock"
