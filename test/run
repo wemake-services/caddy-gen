@@ -1,7 +1,5 @@
-#!/bin/sh
-
-set -o errexit
-set -o xtrace
+#!/usr/bin/env bash
+set -exuo pipefail
 
 # test a docker process
 docker ps | grep -q caddy-gen
@@ -9,8 +7,8 @@ docker ps | grep -q caddy-gen
 # test availability and status code
 curl 127.0.0.1:80
 
-# test image size (see wemake-services/docker-image-size-limit)
-disl caddy-gen:latest 100MB
+# test image size < 100MB
+(( $(docker inspect caddy-gen:latest -f '{{.Size}}') < 100 * 2**20 ))
 
 # test feature CADDY_TEMPLATE
 printf 'http://test-template.localhost {\n  respond "template"\n}\n' > template.tmpl

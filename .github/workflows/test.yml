@@ -35,9 +35,6 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ github.token }}
-    - uses: actions/setup-python@v5
-      with: {python-version: '3.x'}
-    - run: pip install docker-image-size-limit
     - name: docker build
       uses: docker/build-push-action@v5
       with:
