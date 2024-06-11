@@ -47,7 +47,7 @@ jobs:
       run: |
         docker run -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock:ro --name caddy-gen caddy-gen:latest
         sleep 5  # wait for container to start
-        ./test/run
+        ./.github/workflows/test.sh
     - name: docker push
       uses: docker/build-push-action@v5
       with:
