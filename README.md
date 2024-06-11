@@ -76,7 +76,7 @@ version: "3"
 services:
   caddy-gen:
     container_name: caddy-gen
-    image: ghcr.io/wemake-services/caddy-gen:latest  # or wemakeservices/caddy-gen:latest
+    image: wemakeservices/caddy-gen:latest # or ghcr.io/wemake-services/caddy-gen:latest
     restart: always
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro # needs socket to read events
@@ -121,7 +121,7 @@ of the original incoming value. See [Headers](https://caddyserver.com/docs/caddy
 version: "3"
 services:
   caddy-gen:
-    image: ghcr.io/wemake-services/caddy-gen:latest  # or wemakeservices/caddy-gen:latest
+    image: wemakeservices/caddy-gen:latest # or ghcr.io/wemake-services/caddy-gen:latest
     restart: always
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro # needs socket to read events
@@ -152,7 +152,7 @@ and only requests to `/api/*` will be routed to the whoami service.  See
 version: "3"
 services:
   caddy-gen:
-    image: ghcr.io/wemake-services/caddy-gen:latest  # or wemakeservices/caddy-gen:latest
+    image: wemakeservices/caddy-gen:latest # or ghcr.io/wemake-services/caddy-gen:latest
     restart: always
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro # needs socket to read events
