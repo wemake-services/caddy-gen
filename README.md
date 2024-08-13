@@ -76,7 +76,7 @@ version: "3"
 services:
   caddy-gen:
     container_name: caddy-gen
-    image: "wemakeservices/caddy-gen:latest"
+    image: wemakeservices/caddy-gen:latest # or ghcr.io/wemake-services/caddy-gen:latest
     restart: always
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro # needs socket to read events
@@ -112,7 +112,7 @@ services:
       - ./caddy-info:/data/caddy
 ```
 
-### Add or modify reverse_proxy headers 
+### Add or modify reverse_proxy headers
 
 With the following settings, the upstream host will see its own address instead
 of the original incoming value. See [Headers](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy#headers).
@@ -121,7 +121,7 @@ of the original incoming value. See [Headers](https://caddyserver.com/docs/caddy
 version: "3"
 services:
   caddy-gen:
-    image: "wemakeservices/caddy-gen:latest"
+    image: wemakeservices/caddy-gen:latest # or ghcr.io/wemake-services/caddy-gen:latest
     restart: always
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro # needs socket to read events
@@ -152,7 +152,7 @@ and only requests to `/api/*` will be routed to the whoami service.  See
 version: "3"
 services:
   caddy-gen:
-    image: "wemakeservices/caddy-gen:latest"
+    image: wemakeservices/caddy-gen:latest # or ghcr.io/wemake-services/caddy-gen:latest
     restart: always
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro # needs socket to read events
