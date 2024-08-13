@@ -16,9 +16,6 @@ jobs:
       packages: write
     steps:
     - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        ref: ${{ github.event.pull_request.head.sha || github.ref }} # fix SHA
     - uses: docker/setup-buildx-action@v3
     - uses: docker/metadata-action@v5
       id: meta
