@@ -6,6 +6,10 @@
 
 A perfect mix of [`Caddy`](https://github.com/mholt/caddy), [`docker-gen`](https://github.com/jwilder/docker-gen), and [`forego`](https://github.com/jwilder/forego). Inspired by [`nginx-proxy`](https://github.com/jwilder/nginx-proxy).
 
+Download:
+- https://hub.docker.com/r/wemakeservices/caddy-gen
+- https://ghcr.io/wemake-services/caddy-gen
+
 ---
 
 ## Why
