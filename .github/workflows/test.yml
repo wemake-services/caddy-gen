@@ -40,7 +40,7 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: docker build
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         cache-from: type=gha
         cache-to: type=gha,mode=max
@@ -53,7 +53,7 @@ jobs:
         sleep 5  # wait for container to start
         ./.github/workflows/test.sh
     - name: docker push
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         cache-from: type=gha
         cache-to: type=gha,mode=max
