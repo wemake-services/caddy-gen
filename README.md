@@ -105,6 +105,17 @@ services:
 
 See [`docker-compose.yml`](https://github.com/wemake-services/caddy-gen/blob/master/example/docker-compose.yml) example file.
 
+> [!NOTE]
+> Literal `$` should be doubled (`$$`) to avoid [docker compose interpolation](https://docs.docker.com/reference/compose-file/interpolation), e.g.:
+> ```
+> labels:
+>   virtual.host.directives: |
+>     basic_auth {
+>       usr $2a$14$aSp4Ch...  # will fail
+>       usr $2a$14$$aSp4Ch... # works
+>     }
+> ```
+
 ### Backing up certificates
 
 To backup certificates make a volume:
