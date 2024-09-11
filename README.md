@@ -107,7 +107,7 @@ See [`docker-compose.yml`](https://github.com/wemake-services/caddy-gen/blob/mas
 
 > [!NOTE]
 > Literal `$` should be doubled (`$$`) to avoid [docker compose interpolation](https://docs.docker.com/reference/compose-file/interpolation), e.g.:
-> ```
+> ```yaml
 > labels:
 >   virtual.host.directives: |
 >     basic_auth {
@@ -198,7 +198,7 @@ With this custom template, Caddy-gen will act as a reverse proxy for service
 containers and store their logs under the appropriate host folder in
 `/var/logs`.
 
-```jinja
+```caddy
 # file: ./caddy/template
 (redirectHttps) {
   @http {
@@ -256,7 +256,7 @@ staging environment](https://letsencrypt.org/docs/staging-environment/). This
 is [useful for testing](https://caddyserver.com/docs/automatic-https#testing)
 without running up against rate limits when you want to deploy.
 
-```jinja
+```caddy
 # file: ./caddy/global_options
 {
   acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
