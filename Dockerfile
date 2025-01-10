@@ -1,4 +1,4 @@
-FROM caddy:2.8.4-alpine
+FROM caddy:2.9.1-alpine
 
 ARG DOCKER_GEN_VERSION="0.14.0"
 ARG FOREGO_VERSION="0.16.1"
