@@ -46,7 +46,7 @@
   {{ if $hostImport }}import {{ $hostImport }}{{ end }}
 
   {{ if $basicauth }}
-  basicauth {{ $authPath }} {
+  basic_auth {{ $authPath }} {
       {{ $authUsername }} {{ $authPassword }}
   }
   {{ end }}
