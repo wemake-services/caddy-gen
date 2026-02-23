@@ -1,7 +1,5 @@
 #!/bin/sh
-
-set -o errexit
-set -o nounset
+set -euo pipefail
 
 CADDY_SNIPPET="${CADDY_SNIPPET:-}"
 # caddy_template is by default set to the backup to avoid adding the snippet

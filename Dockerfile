@@ -9,15 +9,13 @@ ENV DOCKER_HOST="unix:///tmp/docker.sock"
 # Install all dependenices:
 RUN apk update && apk upgrade \
   && apk add --no-cache bash openssh-client git \
-  && apk add --no-cache --virtual .build-dependencies curl wget tar \
+  && apk add --no-cache --virtual .build-dependencies curl tar \
   # Install Forego
-  && wget --quiet "https://github.com/jwilder/forego/releases/download/v${FOREGO_VERSION}/forego" \
-  && mv ./forego /usr/bin/forego \
-  && chmod u+x /usr/bin/forego \
+  && curl -fsSLo /usr/bin/forego "https://github.com/jwilder/forego/releases/download/v${FOREGO_VERSION}/forego" \
+  && chmod a+x /usr/bin/forego \
   # Install docker-gen
-  && wget --quiet "https://github.com/nginx-proxy/docker-gen/releases/download/${DOCKER_GEN_VERSION}/docker-gen-alpine-linux-amd64-${DOCKER_GEN_VERSION}.tar.gz" \
-  && tar -C /usr/bin -xvzf "docker-gen-alpine-linux-amd64-${DOCKER_GEN_VERSION}.tar.gz" \
-  && rm "docker-gen-alpine-linux-amd64-${DOCKER_GEN_VERSION}.tar.gz" \
+  && curl -fsSL "https://github.com/nginx-proxy/docker-gen/releases/download/${DOCKER_GEN_VERSION}/docker-gen-alpine-linux-amd64-${DOCKER_GEN_VERSION}.tar.gz" \
+   | tar -C /usr/bin -xvzf - \
   && apk del .build-dependencies
 
 EXPOSE 80 443 2015
