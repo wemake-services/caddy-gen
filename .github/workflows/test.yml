@@ -49,7 +49,7 @@ jobs:
         tags: caddy-gen:latest
     - name: test
       run: |
-        docker run -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock:ro --name caddy-gen caddy-gen:latest
+        docker run -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock:ro --name caddy-gen --group-add $(getent group docker | cut -d: -f3) caddy-gen:latest
         sleep 5  # wait for container to start
         ./.github/workflows/test.sh
     - name: docker push
