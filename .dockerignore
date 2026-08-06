@@ -1,4 +1,4 @@
-*.md
-.*
-Dockerfile
-docker-compose.yml
+*
+!*.sh
+!docker-gen
+!Procfile

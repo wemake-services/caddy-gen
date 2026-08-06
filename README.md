@@ -76,7 +76,6 @@ Caddy-gen is created to be used in a single container. It will act as a reverse
 proxy for the whoami service.
 
 ```yaml
-version: "3"
 services:
   caddy-gen:
     container_name: caddy-gen
@@ -85,6 +84,8 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro # needs socket to read events
       - ./caddy-info:/data/caddy # needs volume to back up certificates
+    group_add:
+      - ${DOCKER_GID:-998} # set this to the docker.sock group id
     ports:
       - "80:80"
       - "443:443"
@@ -133,7 +134,6 @@ With the following settings, the upstream host will see its own address instead
 of the original incoming value. See [Headers](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy#headers).
 
 ```yaml
-version: "3"
 services:
   caddy-gen:
     image: wemakeservices/caddy-gen:latest # or ghcr.io/wemake-services/caddy-gen:latest
@@ -141,6 +141,8 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro # needs socket to read events
       - ./caddy-info:/data/caddy # needs volume to back up certificates
+    group_add:
+      - ${DOCKER_GID:-998} # set this to the docker.sock group id
     ports:
       - "80:80"
       - "443:443"
@@ -164,7 +166,6 @@ and only requests to `/api/*` will be routed to the whoami service.  See
 [file_server](https://caddyserver.com/docs/caddyfile/directives/file_server).
 
 ```yaml
-version: "3"
 services:
   caddy-gen:
     image: wemakeservices/caddy-gen:latest # or ghcr.io/wemake-services/caddy-gen:latest
@@ -173,6 +174,8 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro # needs socket to read events
       - ./caddy-info:/data/caddy # needs volume to back up certificates
       - ./www:/srv/myapp/www # files served by myapp.com
+    group_add:
+      - ${DOCKER_GID:-998} # set this to the docker.sock group id
     ports:
       - "80:80"
       - "443:443"

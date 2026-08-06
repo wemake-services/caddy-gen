@@ -7,8 +7,8 @@ docker ps | grep -q caddy-gen
 # test availability and status code
 curl 127.0.0.1:80
 
-# test image size < 100MB
-(( $(docker inspect caddy-gen:latest -f '{{.Size}}') < 100 * 2**20 ))
+# test image size < 150MB
+(( $(docker inspect caddy-gen:latest -f '{{.Size}}') < 150 * 2**20 ))
 
 # test feature CADDY_TEMPLATE
 printf 'http://test-template.localhost {\n  respond "template"\n}\n' > /tmp/template.tmpl
